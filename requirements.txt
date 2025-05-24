@@ -1,8 +1,5 @@
-flask
-flask-ngrok
+streamlit
 tensorflow
-pyngrok
-opencv-python
+opencv-python-headless
 numpy
 gdown
-werkzeug
