@@ -1,9 +1,0 @@
-flask
-flask-ngrok
-tensorflow
-pyngrok
-opencv-python
-numpy
-gdown
-werkzeug
-gunicorn
