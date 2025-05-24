@@ -1,13 +1,12 @@
 import streamlit as st
 import numpy as np
-import cv2
 from tensorflow import keras
 import os
 import gdown
 from PIL import Image
 
-# Model URL and local path
-MODEL_URL = "https://drive.google.com/uc?id=1mWodSTMr2JbLAuMzfG9ChIxSIw96Mxwp"
+# New Model URL and local path
+MODEL_URL = "https://drive.google.com/uc?id=1YpQTwqlHaLXnrzTwKDVqoLRGZgchTKWp"
 MODEL_PATH = "Brain_Tumor_Detect.h5"
 
 # Download model if not present
