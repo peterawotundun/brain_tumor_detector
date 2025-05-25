@@ -1,0 +1,4 @@
+flask
+flask-cors
+inference_sdk
+gunicorn

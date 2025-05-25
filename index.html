@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Brain Tumor Detector</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="bg-white p-8 rounded shadow-md w-full max-w-md text-center">
+    <h1 class="text-2xl font-bold mb-4">Brain Tumor Detector</h1>
+    <input type="file" id="imageInput" accept="image/*" class="mb-4">
+    <button onclick="uploadImage()" class="bg-blue-600 text-white px-4 py-2 rounded">Upload & Predict</button>
+    <pre id="result" class="mt-4 bg-gray-200 p-4 rounded text-left text-sm whitespace-pre-wrap"></pre>
+  </div>
+
+  <script>
+    async function uploadImage() {
+      const input = document.getElementById('imageInput');
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const resultBox = document.getElementById('result');
+      resultBox.textContent = 'Processing...';
+
+      const response = await fetch('/predict', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      resultBox.textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
