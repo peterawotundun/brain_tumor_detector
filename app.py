@@ -11,10 +11,6 @@ CLIENT = InferenceHTTPClient(
     api_key="PPOn3zoc59OqaXFYyDrZ"
 )
 
-@app.route("/")
-def home():
-    return send_file("index.html")
-
 @app.route("/predict", methods=["POST"])
 def predict():
     if 'image' not in request.files:
@@ -27,7 +23,20 @@ def predict():
     try:
         result = CLIENT.infer(file_path, model_id="my-first-project-tm3fw/1")
         os.remove(file_path)
-        return jsonify(result)
+
+        predictions = result.get("predictions", [])
+        if len(predictions) > 0:
+            top_pred = predictions[0]
+            predicted_class = top_pred.get("class", "Unknown")
+            confidence = top_pred.get("confidence", 0)
+
+            return jsonify({
+                "prediction": predicted_class,
+                "confidence": confidence
+            })
+        else:
+            return jsonify({"error": "No predictions found"}), 500
+
     except Exception as e:
         os.remove(file_path)
         return jsonify({"error": str(e)}), 500
