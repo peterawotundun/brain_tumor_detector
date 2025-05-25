@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from inference_sdk import InferenceHTTPClient
 import os
@@ -6,15 +6,14 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Roboflow API client
 CLIENT = InferenceHTTPClient(
     api_url="https://serverless.roboflow.com",
     api_key="PPOn3zoc59OqaXFYyDrZ"
 )
 
-@app.route("/")
-def home():
-    return "Welcome to the Brain Tumor Detector API! Use the /predict endpoint to POST an image."
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html")
 
 @app.route("/predict", methods=["POST"])
 def predict():
