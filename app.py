@@ -3,9 +3,14 @@ from flask_cors import CORS
 from inference_sdk import InferenceHTTPClient
 import os
 
-# Define the Flask app first
 app = Flask(__name__)
 CORS(app)
+
+# ✅ Initialize once globally
+CLIENT = InferenceHTTPClient(
+    api_url="https://serverless.roboflow.com",
+    api_key="PPOn3zoc59OqaXFYyDrZ"
+)
 
 @app.route("/")
 def home():
@@ -21,10 +26,6 @@ def predict():
     image.save(file_path)
 
     try:
-        CLIENT = InferenceHTTPClient(
-            api_url="https://serverless.roboflow.com",
-            api_key="PPOn3zoc59OqaXFYyDrZ"
-        )
         result = CLIENT.infer(file_path, model_id="my-first-project-tm3fw/1")
         os.remove(file_path)
         return jsonify(result)
