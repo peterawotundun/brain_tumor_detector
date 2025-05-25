@@ -28,7 +28,9 @@ def predict():
     try:
         result = CLIENT.infer(file_path, model_id="my-first-project-tm3fw/1")
         os.remove(file_path)
-        return jsonify(result)
+
+        prediction = result[0]
+        return prediction
     except Exception as e:
         os.remove(file_path)
         return jsonify({"error": str(e)}), 500
