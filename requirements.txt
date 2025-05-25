@@ -2,3 +2,4 @@ flask
 flask-cors
 inference_sdk
 gunicorn
+opencv-python-headless
