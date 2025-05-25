@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from inference_sdk import InferenceHTTPClient
 import os
@@ -6,10 +6,15 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+# Roboflow API client
 CLIENT = InferenceHTTPClient(
     api_url="https://serverless.roboflow.com",
     api_key="PPOn3zoc59OqaXFYyDrZ"
 )
+
+@app.route("/")
+def home():
+    return "Welcome to the Brain Tumor Detector API! Use the /predict endpoint to POST an image."
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -24,19 +29,18 @@ def predict():
         result = CLIENT.infer(file_path, model_id="my-first-project-tm3fw/1")
         os.remove(file_path)
 
-        predictions = result.get("predictions", [])
-        if len(predictions) > 0:
-            top_pred = predictions[0]
-            predicted_class = top_pred.get("class", "Unknown")
-            confidence = top_pred.get("confidence", 0)
-
+        if 'predictions' in result and len(result['predictions']) > 0:
+            top_prediction = result['predictions'][0]
             return jsonify({
-                "prediction": predicted_class,
-                "confidence": confidence
+                "class": top_prediction["class"],
+                "confidence": round(top_prediction["confidence"] * 100, 2)
             })
         else:
-            return jsonify({"error": "No predictions found"}), 500
+            return jsonify({"message": "No tumor detected."})
 
     except Exception as e:
         os.remove(file_path)
         return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(debug=True)
