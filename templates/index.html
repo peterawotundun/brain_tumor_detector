@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Brain Tumor Detector</title>
+</head>
+<body>
+    <h2>Upload MRI Image for Tumor Detection</h2>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="image" required />
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="result" style="margin-top: 20px;"></div>
+
+    <script>
+        const form = document.getElementById("upload-form");
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const response = await fetch("/predict", {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            const resultDiv = document.getElementById("result");
+
+            if (data.class) {
+                resultDiv.innerHTML = `<strong>Prediction:</strong> ${data.class} <br><strong>Confidence:</strong> ${data.confidence}%`;
+            } else if (data.message) {
+                resultDiv.innerHTML = data.message;
+            } else {
+                resultDiv.innerHTML = "Error: " + (data.error || "Unknown error");
+            }
+        });
+    </script>
+</body>
+</html>
